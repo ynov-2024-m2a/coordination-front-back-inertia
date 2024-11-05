@@ -9,10 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppHead: typeof import('./inertia/components/AppHead.vue')['default']
     Button: typeof import('./inertia/components/ui/button/Button.vue')['default']
-    ConfirmationModal: typeof import('./inertia/components/ui/deleteModal/ConfirmationModal.vue')['default']
-    DataTable: typeof import('./inertia/components/ui/table/DataTable.vue')['default']
     DeleteModal: typeof import('./inertia/components/ui/deleteModal/DeleteModal.vue')['default']
-    EditModal: typeof import('./inertia/components/ui/editModal/EditModal.vue')['default']
     FormControl: typeof import('./inertia/components/ui/form/FormControl.vue')['default']
     FormDescription: typeof import('./inertia/components/ui/form/FormDescription.vue')['default']
     FormField: typeof import('./inertia/components/ui/form/FormField.vue')['default']
