@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AuthLayout from '~/layouts/AuthLayout.vue'
 import { useForm } from '@inertiajs/vue3'
-import {ref} from "vue";
+import { ref } from "vue";
 
 defineOptions({ layout: AuthLayout })
 
