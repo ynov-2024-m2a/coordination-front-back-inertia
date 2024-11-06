@@ -7,9 +7,6 @@ import type { Authenticators } from '@adonisjs/auth/types'
  * access to unauthenticated users.
  */
 export default class AuthMiddleware {
-  /**
-   * The URL to redirect to, when authentication fails
-   */
   redirectTo = '/login'
 
   async handle(
@@ -19,7 +16,15 @@ export default class AuthMiddleware {
       guards?: (keyof Authenticators)[]
     } = {}
   ) {
-    await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
-    return next()
+    try {
+      await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+      await next()
+    } catch {
+      if (ctx.request.accepts(['html'])) {
+        return ctx.response.redirect(this.redirectTo)
+      }
+
+      return ctx.response.status(401).json({ error: 'Unauthorized' })
+    }
   }
 }
