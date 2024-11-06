@@ -2,18 +2,18 @@
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 
-// Les téléphones sont passés en tant que props depuis le backend
 const props = defineProps({
   phones: Array,
+  statuses: Array,
 })
 
-// Debug : Vérifiez le contenu de phones
-console.log("Téléphones reçus:", props.phones)
-
+// Formulaire et modales
 const form = useForm({})
-
 const showModal = ref(false)
 const phoneToDelete = ref(null)
+const showPhoneModal = ref(false)
+const selectedPhone = ref(null)
+const mode = ref('create')
 
 // Champs de recherche
 const searchName = ref('')
@@ -35,10 +35,6 @@ function deletePhone() {
     })
   }
 }
-
-const showPhoneModal = ref(false)
-const selectedPhone = ref(null)
-const mode = ref('create')
 
 function openCreateModal() {
   selectedPhone.value = null
@@ -62,17 +58,11 @@ function handleCancel() {
 
 // Filtrer les téléphones en fonction des recherches
 const filteredPhones = computed(() => {
-  console.log("Recherche en cours :", {
-    name: searchName.value,
-    brand: searchBrand.value,
-    status: searchStatus.value
-  });
-
   return props.phones.filter((phone) => {
     const nameMatch = phone.name.toLowerCase().includes(searchName.value.toLowerCase())
     const brandMatch = phone.brand.toLowerCase().includes(searchBrand.value.toLowerCase())
-    const statusMatch = phone.status.toLowerCase().includes(searchStatus.value.toLowerCase())
-    
+    const statusMatch = searchStatus.value ? phone.status_id === Number(searchStatus.value) : true
+
     return nameMatch && brandMatch && statusMatch
   })
 })
@@ -84,25 +74,30 @@ const filteredPhones = computed(() => {
     <button @click="openCreateModal" class="text-blue-600 hover:underline">Ajouter un téléphone</button>
 
     <!-- Champs de recherche -->
-    <div class="mt-4">
+    <div class="mt-4 flex space-x-2">
       <input
         v-model="searchName"
         type="text"
         placeholder="Rechercher par nom"
-        class="border p-2 mr-2"
+        class="border p-2"
       />
       <input
         v-model="searchBrand"
         type="text"
         placeholder="Rechercher par marque"
-        class="border p-2 mr-2"
-      />
-      <input
-        v-model="searchStatus"
-        type="text"
-        placeholder="Rechercher par statut"
         class="border p-2"
       />
+      <!-- Menu déroulant pour le statut -->
+      <select
+        v-model="searchStatus"
+        class="border p-2"
+        placeholder="Rechercher par statut"
+      >
+        <option value="">Tous les statuts</option>
+        <option v-for="status in props.statuses" :key="status.id" :value="status.id">
+          {{ status.name }}
+        </option>
+      </select>
     </div>
 
     <!-- Tableau ShadCN -->
@@ -121,7 +116,7 @@ const filteredPhones = computed(() => {
           <TableCell class="font-medium">{{ phone.name }}</TableCell>
           <TableCell>{{ phone.brand }}</TableCell>
           <TableCell>{{ phone.number }}</TableCell>
-          <TableCell>{{ phone.status }}</TableCell>
+          <TableCell>{{ phone.status }}</TableCell> 
           <TableCell class="text-right">
             <button @click="openEditModal(phone)" class="text-blue-600 hover:underline">Modifier</button>
             <button @click="confirmDelete(phone.id)" class="text-red-600 hover:underline ml-2">Supprimer</button>
@@ -141,6 +136,7 @@ const filteredPhones = computed(() => {
       v-if="showPhoneModal"
       :phone="selectedPhone"
       :mode="mode"
+      :statuses="props.statuses"
       @confirm="handleConfirm"
       @cancel="handleCancel"
     />

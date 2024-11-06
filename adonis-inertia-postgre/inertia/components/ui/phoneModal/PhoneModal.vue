@@ -14,6 +14,10 @@ const props = defineProps({
     required: true,
     validator: (value) => ['create', 'edit'].includes(value),
   },
+  statuses: {
+    type: Array,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['confirm', 'cancel'])
@@ -22,7 +26,7 @@ const form = useForm({
   name: props.phone?.name || '',
   brand: props.phone?.brand || '',
   number: props.phone?.number || '',
-  status: props.phone?.status || 'active',
+  status_id: props.phone?.status_id || (props.statuses.length > 0 ? props.statuses[0].name : ''), // Valeur par défaut du premier statut
 })
 
 // Met à jour le formulaire chaque fois que `props.phone` change, en mode édition
@@ -33,7 +37,7 @@ watch(
       form.name = newPhone?.name || ''
       form.brand = newPhone?.brand || ''
       form.number = newPhone?.number || ''
-      form.status = newPhone?.status || 'active'
+      form.status_id = newPhone?.status || (props.statuses.length > 0 ? props.statuses[0].name : '')
     }
   },
   { immediate: true }
@@ -95,13 +99,14 @@ function submit() {
         </FormField>
 
         <!-- Champ Statut -->
-        <FormField name="status" v-slot="{ field, error }">
+        <FormField name="status_id" v-slot="{ field, error }">
           <FormItem>
             <FormLabel>Statut</FormLabel>
             <FormControl>
-              <select v-bind="field" v-model="form.status" class="mt-1 block w-full rounded-md border-gray-300">
-                <option value="active">Actif</option>
-                <option value="repair">En réparation</option>
+              <select v-bind="field" v-model="form.status_id" class="mt-1 block w-full rounded-md border-gray-300">
+                <option v-for="status in props.statuses" :key="status.id" :value="status.id">
+                  {{ status.name }}
+                </option>
               </select>
             </FormControl>
             <FormMessage v-if="error">{{ error }}</FormMessage>
