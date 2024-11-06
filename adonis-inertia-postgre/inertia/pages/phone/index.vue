@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import AppLayout from "~/layouts/AppLayout.vue";
+
+defineOptions({ layout: AppLayout })
 
 // Les téléphones sont passés en tant que props depuis le backend
 const props = defineProps({
@@ -72,7 +75,7 @@ const filteredPhones = computed(() => {
     const nameMatch = phone.name.toLowerCase().includes(searchName.value.toLowerCase())
     const brandMatch = phone.brand.toLowerCase().includes(searchBrand.value.toLowerCase())
     const statusMatch = phone.status.toLowerCase().includes(searchStatus.value.toLowerCase())
-    
+
     return nameMatch && brandMatch && statusMatch
   })
 })
