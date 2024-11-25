@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
 import { watch } from 'vue'
+import { PhoneBrand } from '#models/PhoneEnum';
 
 const props = defineProps({
   phone: {
@@ -56,7 +57,9 @@ function submit() {
   <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-6 rounded-md shadow-md w-1/3">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">{{ mode === 'edit' ? 'Modifier le téléphone' : 'Créer un téléphone' }}</h2>
+        <h2 class="text-xl font-semibold">
+          {{ mode === 'edit' ? 'Modifier le téléphone' : 'Créer un téléphone' }}
+        </h2>
         <button @click="$emit('cancel')" class="text-gray-500 hover:text-gray-800">×</button>
       </div>
 
@@ -77,7 +80,16 @@ function submit() {
           <FormItem>
             <FormLabel>Marque</FormLabel>
             <FormControl>
-              <Input v-bind="field" v-model="form.brand" placeholder="Marque" />
+              <select
+                v-bind="field"
+                v-model="form.brand"
+                class="mt-1 block w-full rounded-md border-gray-300"
+              >
+                <option disabled value="">-- Sélectionnez une marque --</option>
+                <option v-for="(label, value) in PhoneBrand" :key="value" :value="value">
+                  {{ label.charAt(0).toUpperCase() + label.slice(1) }}
+                </option>
+              </select>
             </FormControl>
             <FormMessage v-if="error">{{ error }}</FormMessage>
           </FormItem>
@@ -99,7 +111,11 @@ function submit() {
           <FormItem>
             <FormLabel>Statut</FormLabel>
             <FormControl>
-              <select v-bind="field" v-model="form.status" class="mt-1 block w-full rounded-md border-gray-300">
+              <select
+                v-bind="field"
+                v-model="form.status"
+                class="mt-1 block w-full rounded-md border-gray-300"
+              >
                 <option value="active">Actif</option>
                 <option value="repair">En réparation</option>
               </select>
@@ -110,7 +126,13 @@ function submit() {
 
         <!-- Boutons -->
         <div class="flex justify-end space-x-4">
-          <button type="button" @click="$emit('cancel')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md">Annuler</button>
+          <button
+            type="button"
+            @click="$emit('cancel')"
+            class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
+          >
+            Annuler
+          </button>
           <Button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">
             {{ mode === 'edit' ? 'Mettre à jour' : 'Créer' }}
           </Button>

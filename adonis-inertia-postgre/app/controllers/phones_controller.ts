@@ -13,6 +13,7 @@ export default class PhonesController {
 
   public async store({ request, response }: HttpContextContract) {
     const data = request.only(['name', 'brand', 'number', 'status'])
+    data.brand = data.brand.toLowerCase()
     await Phone.create(data)
     return response.redirect('/phones')
   }

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { PhoneBrand } from './PhoneEnum.js'
 
 export default class Phone extends BaseModel {
   @column({ isPrimary: true })
@@ -9,7 +10,7 @@ export default class Phone extends BaseModel {
   declare name: string
 
   @column()
-  declare brand: string
+  declare brand: PhoneBrand
 
   @column()
   declare number: string
