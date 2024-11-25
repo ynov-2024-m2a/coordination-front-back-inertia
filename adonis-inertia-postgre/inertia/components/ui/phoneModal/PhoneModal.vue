@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
 import { watch } from 'vue'
-import { PhoneBrand } from '#models/PhoneEnum';
+import { PhoneBrand } from '#models/PhoneEnum'
 
 const props = defineProps({
   phone: {
@@ -35,6 +35,8 @@ watch(
       form.brand = newPhone?.brand || ''
       form.number = newPhone?.number || ''
       form.status = newPhone?.status || 'active'
+
+      console.log('Form values updated:', form.brand)
     }
   },
   { immediate: true }
@@ -86,7 +88,11 @@ function submit() {
                 class="mt-1 block w-full rounded-md border-gray-300"
               >
                 <option disabled value="">-- Sélectionnez une marque --</option>
-                <option v-for="(label, value) in PhoneBrand" :key="value" :value="value">
+                <option
+                  v-for="(label, value) in PhoneBrand"
+                  :key="value"
+                  :value="value.toLowerCase()"
+                >
                   {{ label.charAt(0).toUpperCase() + label.slice(1) }}
                 </option>
               </select>
