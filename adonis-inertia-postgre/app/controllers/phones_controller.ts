@@ -1,34 +1,34 @@
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContext } from '@adonisjs/core/http'
 import Phone from '#models/phone'
 
 export default class PhonesController {
-  public async index({ inertia }: HttpContextContract) {
+  public async index({ inertia }: HttpContext) {
     const phones = await Phone.all()
     return inertia.render('phone/index', { phones: phones.map((phone) => phone.toJSON()) })
   }
 
-  public async create({ inertia }: HttpContextContract) {
+  public async create({ inertia }: HttpContext) {
     return inertia.render('phone/create')
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request, response }: HttpContext) {
     const data = request.only(['name', 'brand', 'number', 'status'])
     data.brand = data.brand.toLowerCase()
     await Phone.create(data)
     return response.redirect('/phones')
   }
 
-  public async show({ inertia, params }: HttpContextContract) {
+  public async show({ inertia, params }: HttpContext) {
     const phone = await Phone.findOrFail(params.id)
     return inertia.render('phone/show', { phone })
   }
 
-  public async edit({ inertia, params }: HttpContextContract) {
+  public async edit({ inertia, params }: HttpContext) {
     const phone = await Phone.findOrFail(params.id)
     return inertia.render('phone/edit', { phone })
   }
 
-  public async update({ request, response, params }: HttpContextContract) {
+  public async update({ request, response, params }: HttpContext) {
     const phone = await Phone.findOrFail(params.id)
     const data = request.only(['name', 'brand', 'number', 'status'])
     phone.merge(data)
@@ -36,7 +36,7 @@ export default class PhonesController {
     return response.redirect('/phones')
   }
 
-  public async destroy({ params, response }: HttpContextContract) {
+  public async destroy({ params, response }: HttpContext) {
     const phone = await Phone.findOrFail(params.id)
     await phone.delete()
     return response.redirect('/phones')
