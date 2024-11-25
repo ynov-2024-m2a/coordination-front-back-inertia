@@ -43,7 +43,7 @@ function submit() {
           <FormItem>
             <FormLabel>Mot de passe</FormLabel>
             <FormControl>
-              <Input v-model="form.password" type="password" placeholder="Mot de passe" v-bind="componentField" required />
+              <Input autocomplete="new-password" v-model="form.password" type="password" placeholder="Mot de passe" v-bind="componentField" required />
             </FormControl>
             <FormMessage />
           </FormItem>
