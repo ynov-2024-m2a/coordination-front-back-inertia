@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import AppLayout from "~/layouts/AppLayout.vue";
+import AppLayout from "~/layouts/AppLayout.vue"
+import { router } from '@inertiajs/vue3'
 
 defineOptions({ layout: AppLayout })
 
-// Les téléphones sont passés en tant que props depuis le backend
 const props = defineProps({
   phones: Array,
+  activePhonesCount: Number,
 })
 
-// Debug : Vérifiez le contenu de phones
-console.log("Téléphones reçus:", props.phones)
+const activePhonesCount = ref(props.activePhonesCount)
 
 const form = useForm({})
 
@@ -22,6 +22,16 @@ const phoneToDelete = ref(null)
 const searchName = ref('')
 const searchBrand = ref('')
 const searchStatus = ref('')
+
+
+function reloadActivePhonesCount() {
+  router.reload({
+    only: ['activePhonesCount'], // Recharge uniquement `activePhonesCount` depuis le backend
+    onSuccess: (page) => {
+      activePhonesCount.value = page.props.activePhonesCount
+    },
+  })
+}
 
 function confirmDelete(phoneId) {
   phoneToDelete.value = phoneId
@@ -34,6 +44,7 @@ function deletePhone() {
       onSuccess: () => {
         showModal.value = false
         phoneToDelete.value = null
+        reloadActivePhonesCount() // Recharger après avoir supprimé
       },
     })
   }
@@ -57,6 +68,7 @@ function openEditModal(phone) {
 
 function handleConfirm() {
   showPhoneModal.value = false
+  reloadActivePhonesCount()
 }
 
 function handleCancel() {
@@ -71,6 +83,7 @@ const filteredPhones = computed(() => {
     status: searchStatus.value
   });
 
+
   return props.phones.filter((phone) => {
     const nameMatch = phone.name.toLowerCase().includes(searchName.value.toLowerCase())
     const brandMatch = phone.brand.toLowerCase().includes(searchBrand.value.toLowerCase())
@@ -83,8 +96,9 @@ const filteredPhones = computed(() => {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">Liste des téléphones</h1>
-    <button @click="openCreateModal" class="text-blue-600 hover:underline">Ajouter un téléphone</button>
+  <h1 class="text-2xl font-semibold">Liste des téléphones</h1>
+  <p class="mt-2">Nombre de téléphones actifs : <strong>{{ activePhonesCount }}</strong></p>
+  <button @click="openCreateModal" class="text-blue-600 hover:underline">Ajouter un téléphone</button>
 
     <!-- Champs de recherche -->
     <div class="mt-4">

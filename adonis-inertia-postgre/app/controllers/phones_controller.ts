@@ -4,7 +4,15 @@ import Phone from '#models/phone'
 export default class PhonesController {
   public async index({ inertia }: HttpContext) {
     const phones = await Phone.all()
-    return inertia.render('phone/index', { phones: phones.map((phone) => phone.toJSON()) })
+    const activePhonesCountResult = await Phone.query()
+      .where('status', 'active')
+      .count('id as total')
+
+    const activePhonesCount = activePhonesCountResult[0]?.$extras.total || 0
+    return inertia.render('phone/index', {
+      phones: phones.map((phone) => phone.toJSON()),
+      activePhonesCount,
+    })
   }
 
   public async create({ inertia }: HttpContext) {
