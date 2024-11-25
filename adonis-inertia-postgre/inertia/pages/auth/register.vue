@@ -5,10 +5,6 @@ import { ref } from "vue";
 
 defineOptions({ layout: AuthLayout })
 
-defineProps<{
-  errors: { message: string; rule: string; field: string }[]
-}>()
-
 const errors = ref({})
 
 const form = useForm({
@@ -39,65 +35,42 @@ function submit() {
           <FormItem>
             <FormLabel>Prénom</FormLabel>
             <FormControl>
-              <Input v-model="form.firstName" type="text" placeholder="Prénom" v-bind="componentField" />
+              <Input v-model="form.firstName" type="text" placeholder="Prénom" v-bind="componentField" required />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <!-- Filtre erreurs pour firstName -->
-        <div v-if="errors && errors.length > 0" class="text-red-500 text-sm">
-            <span v-for="error in errors.filter(err => err.field === 'firstName')" :key="error.message">
-              {{ error.message }}
-            </span>
-          </div>
 
         <FormField name="lastName" v-slot="{ componentField }">
           <FormItem>
             <FormLabel>Nom</FormLabel>
             <FormControl>
-              <Input v-model="form.lastName" type="text" placeholder="Nom" v-bind="componentField" />
+              <Input v-model="form.lastName" type="text" placeholder="Nom" v-bind="componentField" required />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <!-- Filtre erreurs pour lastName -->
-        <div v-if="errors && errors.length > 0" class="text-red-500 text-sm">
-            <span v-for="error in errors.filter(err => err.field === 'lastName')" :key="error.message">
-              {{ error.message }}
-            </span>
-          </div>
 
         <FormField name="email" v-slot="{ componentField }">
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input v-model="form.email" type="email" placeholder="Email" v-bind="componentField" />
+              <Input v-model="form.email" type="email" placeholder="Email" v-bind="componentField" required />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <!-- Filtre erreurs pour email -->
-        <div v-if="errors && errors.length > 0" class="text-red-500 text-sm">
-            <span v-for="error in errors.filter(err => err.field === 'email')" :key="error.message">
-              {{ error.message }}
-            </span>
-          </div>
 
         <FormField name="password" v-slot="{ componentField }">
           <FormItem>
             <FormLabel>Mot de passe</FormLabel>
             <FormControl>
-              <Input autocomplete="new-password" v-model="form.password" type="password" placeholder="Mot de passe" v-bind="componentField" />
+              <Input v-model="form.password" type="password" placeholder="Mot de passe" v-bind="componentField" required />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <!-- Filtre erreurs pour password -->
-        <div v-if="errors && errors.length > 0" class="text-red-500 text-sm">
-            <span v-for="error in errors.filter(err => err.field === 'password')" :key="error.message">
-              {{ error.message }}
-            </span>
-          </div>
+        <span v-if="errors.message" class="text-red-500">{{ errors.message }}</span>
 
         <Button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md w-full">Créer</Button>
       </form>

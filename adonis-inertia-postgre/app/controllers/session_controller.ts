@@ -1,30 +1,30 @@
 import User from '#models/user'
 import { HttpContext } from '@adonisjs/core/http'
-import { registerValidator } from '#validators/auth'
 
 export default class SessionController {
-  public async index({ inertia }: HttpContext) {
+  public async index({ inertia }: HttpContextContract) {
     return inertia.render('auth/login')
   }
 
-  public async registerIndex({ inertia }: HttpContext) {
+  public async registerIndex({ inertia }: HttpContextContract) {
     return inertia.render('auth/register')
   }
 
   async register({ request, auth, response, inertia }: HttpContext) {
     try {
-      const data = await request.validateUsing(registerValidator)
+      const data = request.only(['firstName', 'lastName', 'email', 'password'])
       await User.create(data)
-
       return response.redirect('/login')
-    } catch (error) {
+    } catch {
       return inertia.render('auth/register', {
-        errors: error.messages || { message: 'Une erreur inattendue est survenue.' },
+        errors: {
+          message: 'Une erreur est survenue',
+        },
       })
     }
   }
 
-  public async logout({ auth, response }: HttpContext) {
+  public async logout({ auth, response }: HttpContextContract) {
     try {
       await auth.use('web').logout()
       return response.redirect('/login')

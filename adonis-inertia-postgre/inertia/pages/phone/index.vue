@@ -5,6 +5,7 @@ import AppLayout from "~/layouts/AppLayout.vue";
 
 defineOptions({ layout: AppLayout })
 
+// Les téléphones sont passés en tant que props depuis le backend
 const props = defineProps({
   phones: Array,
 })
@@ -62,7 +63,7 @@ function handleCancel() {
   showPhoneModal.value = false
 }
 
-// Filtre les téléphones en fonction des recherches
+// Filtrer les téléphones en fonction des recherches
 const filteredPhones = computed(() => {
   console.log("Recherche en cours :", {
     name: searchName.value,
