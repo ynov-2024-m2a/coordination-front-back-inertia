@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { useForm, router } from '@inertiajs/vue3'
 import AppLayout from '~/layouts/AppLayout.vue'
-import { router } from '@inertiajs/vue3'
+import { PhoneBrand } from '#models/PhoneEnum'
 
 defineOptions({ layout: AppLayout })
 
@@ -12,9 +12,26 @@ const props = defineProps({
   repairPhonesCount: Number,
 })
 
+const phoneBrands = Object.values(PhoneBrand)
+
+const form = useForm({})
+
+const showModal = ref(false)
+const showPhoneModal = ref(false)
+
+const phoneToDelete = ref(null)
+const selectedPhone = ref(null)
+const editingPhoneId = ref(null)
+
 const activePhonesCount = ref(props.activePhonesCount)
 const repairPhonesCount = ref(props.repairPhonesCount)
-const editingPhoneId = ref(null) // ID du téléphone en cours d'édition
+
+// Champs de recherche
+const searchName = ref('')
+const searchBrand = ref('')
+const searchStatus = ref('')
+
+const mode = ref('create')
 
 function enableEditMode(phoneId) {
   editingPhoneId.value = phoneId
@@ -62,16 +79,6 @@ function savePhoneEdit(phoneId, updates) {
   })
 }
 
-const form = useForm({})
-
-const showModal = ref(false)
-const phoneToDelete = ref(null)
-
-// Champs de recherche
-const searchName = ref('')
-const searchBrand = ref('')
-const searchStatus = ref('')
-
 function reloadPhonesStatusCount() {
   router.reload({
     only: ['activePhonesCount', 'repairPhonesCount'], // Recharge ces props depuis le backend
@@ -98,10 +105,6 @@ function deletePhone() {
     })
   }
 }
-
-const showPhoneModal = ref(false)
-const selectedPhone = ref(null)
-const mode = ref('create')
 
 function openCreateModal() {
   selectedPhone.value = null
@@ -206,7 +209,11 @@ const filteredPhones = computed(() => {
               {{ phone.brand }}
             </div>
             <div v-else>
-              <input type="text" v-model="phone.brand" class="border rounded p-1 w-full" />
+              <select v-model="phone.brand" class="border rounded p-1 w-full">
+                <option v-for="brand in phoneBrands" :key="brand" :value="brand">
+                  {{ brand.charAt(0).toUpperCase() + brand.slice(1) }}
+                </option>
+              </select>
             </div>
           </TableCell>
 
