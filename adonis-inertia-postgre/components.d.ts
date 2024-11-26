@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppHead: typeof import('./inertia/components/AppHead.vue')['default']
+    BarChart: typeof import('./inertia/components/ui/chart/BarChart.vue')['default']
     Button: typeof import('./inertia/components/ui/button/Button.vue')['default']
     DeleteModal: typeof import('./inertia/components/ui/deleteModal/DeleteModal.vue')['default']
     FormControl: typeof import('./inertia/components/ui/form/FormControl.vue')['default']
