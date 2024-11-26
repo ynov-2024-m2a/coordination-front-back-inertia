@@ -8,10 +8,16 @@ export default class PhonesController {
       .where('status', 'active')
       .count('id as total')
 
+    const repairPhonesCountResult = await Phone.query()
+      .where('status', 'repair')
+      .count('id as total')
+
     const activePhonesCount = activePhonesCountResult[0]?.$extras.total || 0
+    const repairPhonesCount = repairPhonesCountResult[0]?.$extras.total || 0
     return inertia.render('phone/index', {
       phones: phones.map((phone) => phone.toJSON()),
-      activePhonesCount,
+      activePhonesCount: Number.parseInt(activePhonesCount, 10),
+      repairPhonesCount: Number.parseInt(repairPhonesCount, 10),
     })
   }
 
