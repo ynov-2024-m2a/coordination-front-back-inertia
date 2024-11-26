@@ -148,13 +148,8 @@ const filteredPhones = computed(() => {
 <template>
   <div>
     <h1 class="text-2xl font-semibold">Liste des téléphones</h1>
-    <p class="mt-2">
-      Nombre de téléphones actifs : <strong>{{ activePhonesCount }}</strong>
-    </p>
-    <p class="mt-2">
-      Nombre de téléphones réparation : <strong>{{ repairPhonesCount }}</strong>
-    </p>
-    <button @click="openCreateModal" class="text-blue-600 hover:underline">
+
+    <button @click="openCreateModal" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400">
       Ajouter un téléphone
     </button>
 
@@ -272,6 +267,13 @@ const filteredPhones = computed(() => {
         </TableRow>
       </TableBody>
     </Table>
+
+    <p class="mt-2">
+      Nombre de téléphones actifs : <strong>{{ activePhonesCount }}</strong>
+    </p>
+    <p class="mt-2">
+      Nombre de téléphones réparation : <strong>{{ repairPhonesCount }}</strong>
+    </p>
 
     <DeleteModal
       v-if="showModal"

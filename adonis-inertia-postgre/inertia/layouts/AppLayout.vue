@@ -33,7 +33,7 @@
         </div>
       </nav>
     </header>
-    <div>
+    <div class="p-10">
       <slot />
     </div>
   </div>
