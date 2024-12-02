@@ -1,0 +1,13 @@
+{
+  "extends": "@adonisjs/tsconfig/tsconfig.app.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./build",
+    "baseUrl": ".",  // Base de l'alias
+    "paths": {
+      "#models/*": ["app/models/*"],  // Alias pour les modèles
+      "#controllers/*": ["app/controllers/*"]  // Alias pour les contrôleurs
+    }
+  },
+  "exclude": ["./inertia/**/*", "node_modules", "build"]
+}
